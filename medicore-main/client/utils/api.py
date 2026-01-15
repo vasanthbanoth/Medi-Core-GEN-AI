@@ -36,9 +36,15 @@ def ask_question(question):
         return ErrorResponse()
 
     try:
-        model = genai.GenerativeModel('gemini-2.0-flash-exp')
-        response = model.generate_content(question)
-        time.sleep(4) # Rate limit fix
+        # Priority: Gemini 2.0 Flash Exp
+        try:
+            model = genai.GenerativeModel('gemini-2.0-flash-exp')
+            response = model.generate_content(question)
+            time.sleep(4) # Rate limit fix
+        except Exception:
+            # Fallback to stable model if 2.0 fails (e.g. 429 Limit 0)
+            model = genai.GenerativeModel('gemini-1.5-flash')
+            response = model.generate_content(question)
         
         # Mimic the previous API response structure for compatibility
         class SuccessResponse:
@@ -64,19 +70,27 @@ def get_answer_with_image(question: str, image_file):
         return ErrorResponse()
 
     try:
-        model = genai.GenerativeModel('gemini-2.0-flash-exp')
-        
-        # Convert uploaded file to PIL Image
-        image = Image.open(image_file)
-        
-        response = model.generate_content([question, image])
-        time.sleep(4) # Rate limit fix
-        
+        # Priority: Gemini 2.0 Flash Exp
+        try:
+            model = genai.GenerativeModel('gemini-2.0-flash-exp')
+            # Convert uploaded file to PIL Image
+            image = Image.open(image_file)
+            response = model.generate_content([question, image])
+            time.sleep(4) # Rate limit fix
+        except Exception:
+            # Fallback to stable model if 2.0 fails
+            model = genai.GenerativeModel('gemini-1.5-flash')
+            # Re-open or reset image if needed (PIL Image object is reusable for read)
+            # Actually Image.open doesn't read until usage, but here we passed it.
+            # Best to ensure it's available. The stream 'image_file' might be consumed.
+            # But 'image' variable is PIL object, safe to reuse.
+            response = model.generate_content([question, image])
+
         # Mimic the previous API response structure
         class SuccessResponse:
             status_code = 200
             def json(self):
-                return {"answer": response.text, "image_description": "Processed by Gemini 2.0 Flash Exp"}
+                return {"answer": response.text, "image_description": "Processed by Gemini (2.0 or 1.5)"}
         return SuccessResponse()
 
     except Exception as e:
