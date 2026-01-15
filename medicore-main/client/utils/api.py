@@ -1,4 +1,5 @@
 import os
+import time
 import google.generativeai as genai
 from dotenv import load_dotenv
 from PIL import Image
@@ -35,8 +36,9 @@ def ask_question(question):
         return ErrorResponse()
 
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.0-flash-exp')
         response = model.generate_content(question)
+        time.sleep(4) # Rate limit fix
         
         # Mimic the previous API response structure for compatibility
         class SuccessResponse:
@@ -62,18 +64,19 @@ def get_answer_with_image(question: str, image_file):
         return ErrorResponse()
 
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.0-flash-exp')
         
         # Convert uploaded file to PIL Image
         image = Image.open(image_file)
         
         response = model.generate_content([question, image])
+        time.sleep(4) # Rate limit fix
         
         # Mimic the previous API response structure
         class SuccessResponse:
             status_code = 200
             def json(self):
-                return {"answer": response.text, "image_description": "Processed by Gemini 1.5 Flash"}
+                return {"answer": response.text, "image_description": "Processed by Gemini 2.0 Flash Exp"}
         return SuccessResponse()
 
     except Exception as e:
