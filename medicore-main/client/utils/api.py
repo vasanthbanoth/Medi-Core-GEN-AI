@@ -35,7 +35,7 @@ def ask_question(question):
         return ErrorResponse()
 
     try:
-        model = genai.GenerativeModel('gemini-2.0-flash-exp')
+        model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content(question)
         
         # Mimic the previous API response structure for compatibility
@@ -62,7 +62,7 @@ def get_answer_with_image(question: str, image_file):
         return ErrorResponse()
 
     try:
-        model = genai.GenerativeModel('gemini-2.0-flash-exp')
+        model = genai.GenerativeModel('gemini-1.5-flash')
         
         # Convert uploaded file to PIL Image
         image = Image.open(image_file)
