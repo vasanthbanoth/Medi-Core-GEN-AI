@@ -36,15 +36,14 @@ def ask_question(question):
         return ErrorResponse()
 
     try:
-        # Priority: Gemini 2.0 Flash Exp
+        # Priority: Gemini 2.0 Flash (Stable)
         try:
-            model = genai.GenerativeModel('gemini-2.0-flash-exp')
+            model = genai.GenerativeModel('gemini-2.0-flash')
             response = model.generate_content(question)
             time.sleep(4) # Rate limit fix
         except Exception:
-            # Fallback to stable model if 2.0 fails (e.g. 429 Limit 0)
-            # Using 'gemini-1.5-flash-latest' to avoid 404 on base name
-            model = genai.GenerativeModel('gemini-1.5-flash-latest')
+            # Fallback to generic flash latest if 2.0 fails
+            model = genai.GenerativeModel('gemini-flash-latest')
             response = model.generate_content(question)
         
         # Mimic the previous API response structure for compatibility
@@ -71,16 +70,16 @@ def get_answer_with_image(question: str, image_file):
         return ErrorResponse()
 
     try:
-        # Priority: Gemini 2.0 Flash Exp
+        # Priority: Gemini 2.0 Flash (Stable)
         try:
-            model = genai.GenerativeModel('gemini-2.0-flash-exp')
+            model = genai.GenerativeModel('gemini-2.0-flash')
             # Convert uploaded file to PIL Image
             image = Image.open(image_file)
             response = model.generate_content([question, image])
             time.sleep(4) # Rate limit fix
         except Exception:
-            # Fallback to stable model if 2.0 fails
-            model = genai.GenerativeModel('gemini-1.5-flash-latest')
+            # Fallback to generic flash latest
+            model = genai.GenerativeModel('gemini-flash-latest')
             # Re-open or reset image if needed (PIL Image object is reusable for read)
             # Actually Image.open doesn't read until usage, but here we passed it.
             # Best to ensure it's available. The stream 'image_file' might be consumed.
