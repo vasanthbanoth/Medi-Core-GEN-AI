@@ -5,7 +5,9 @@ from PIL import Image
 import io
 
 # Load environment variables (for local development)
-load_dotenv()
+from pathlib import Path
+env_path = Path(__file__).resolve().parent.parent / '.env'
+load_dotenv(dotenv_path=env_path)
 
 def configure_genai():
     api_key = os.getenv("GOOGLE_API_KEY")
@@ -33,7 +35,7 @@ def ask_question(question):
         return ErrorResponse()
 
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-1.5-flash-latest')
         response = model.generate_content(question)
         
         # Mimic the previous API response structure for compatibility
@@ -60,7 +62,7 @@ def get_answer_with_image(question: str, image_file):
         return ErrorResponse()
 
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-1.5-flash-latest')
         
         # Convert uploaded file to PIL Image
         image = Image.open(image_file)
