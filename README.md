@@ -1,25 +1,30 @@
 # Medi-Core Gen AI 🩺
 
-A Multimodal Medical AI Assistant powered by **Google Gemini** and **Streamlit**.
+A Multimodal Medical AI Assistant powered by **Google Gemini 2.0** and **Streamlit**.
 
 ## 🚀 Features
-- **👁️ Visual Analysis**: Upload medical images (X-Rays, handwritten prescriptions) and get instant explanations using **Google Gemini 2.0 Flash**.
+- **👁️ Visual Analysis**: Upload medical images (X-Rays, handwritten prescriptions) and get instant explanations using **Google Gemini 2.0 Flash** (with auto-fallback to stable versions).
 - **💬 Interactive Chat**: Ask follow-up questions about the analyzed images.
 - **🎨 Modern UI**: A "Web3/Cyberpunk" styled interface built entirely in Python.
-- **🐳 Dockerized**: Ready for deployment on AWS with a single command.
+- **☁️ Cloud/Mobile Ready**: Optimized for Streamlit Cloud (No Docker/Server required).
+
+## 📖 The Implementation Story
+Want to know how this was built from scratch? Check out the included notebook:
+- **[MediCore_Implementation_Story.ipynb](MediCore_Implementation_Story.ipynb)**: A step-by-step guide explaining:
+    - Why we chose **Gemini** over other models.
+    - How **RAG** (Retrieval Augmented Generation) works conceptually.
+    - Why **Streamlit** was the perfect choice for the frontend.
 
 ## 🛠️ Tech Stack
 - **Frontend**: Streamlit
-- **Backend**: FastAPI
-- **AI Model**: Google Gemini (via `google-generativeai`)
-- **Containerization**: Docker & Docker Compose
+- **AI Model**: Google Gemini 2.0 Flash / 1.5 Flash (via `google-generativeai`)
+- **Language**: Python 3.10+
 
 ---
 
 ## ⚡ Quick Start
 
-### Option 1: Run with Docker (Recommended)
-The easiest way to run the full stack (Frontend + Backend).
+### Run Locally
 
 1.  **Clone the repository**:
     ```bash
@@ -27,36 +32,22 @@ The easiest way to run the full stack (Frontend + Backend).
     cd Medi-Core-Gen-AI-main
     ```
 
-2.  **Configure API Key**:
-    Create `medicore-main/server/.env` and add your Google Key:
-    ```env
-    GOOGLE_API_KEY=AIzaSy...
+2.  **Install Dependencies**:
+    ```bash
+    pip install -r medicore-main/client/requirements.txt
     ```
 
-3.  **Run**:
+3.  **Configure API Key**:
+    Create `medicore-main/client/.env` and add your Google Key:
+    ```env
+    GOOGLE_API_KEY="your_api_key_here"
+    ```
+
+4.  **Run the App**:
     ```bash
-    docker-compose up --build
+    streamlit run medicore-main/client/app.py
     ```
     Open **http://localhost:8501** in your browser.
-
----
-
-### Option 2: Run Locally (For Development)
-
-#### 1. Start the Backend
-```bash
-cd medicore-main/server
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
-```
-
-#### 2. Start the Frontend
-Open a new terminal:
-```bash
-cd medicore-main/client
-pip install -r requirements.txt
-streamlit run app.py
-```
 
 ---
 
@@ -64,14 +55,10 @@ streamlit run app.py
 ```
 Medi-Core-Gen-AI-main/
 ├── medicore-main/
-│   ├── client/          # Streamlit Fronend
-│   │   ├── app.py       # Main UI logic
-│   │   └── Dockerfile
-│   ├── server/          # FastAPI Backend
-│   │   ├── main.py      # API Routes
-│   │   ├── modules/     # AI Logic (Gemini Handler)
-│   │   └── Dockerfile
-│   └── docker-compose.yml
-├── aws_setup_guide.md   # Deployment Instructions
+│   ├── client/          # Main Application
+│   │   ├── app.py       # Entry Point
+│   │   ├── utils/       # AI Logic (api.py)
+│   │   └── components/  # UI Modules
+├── MediCore_Implementation_Story.ipynb  # The "Behind the Scenes" Story
 └── README.md
 ```
