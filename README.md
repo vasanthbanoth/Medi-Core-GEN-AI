@@ -18,7 +18,7 @@ Want to know how this was built from scratch? Check out the included notebook:
 ## 🛠️ Tech Stack
 - **Frontend**: Streamlit
 - **AI Model**: Google Gemini 2.0 Flash / 1.5 Flash (via `google-generativeai`)
-- **Language**: Python 3.10+
+- **Language**: Python 3.14+
 
 ---
 
