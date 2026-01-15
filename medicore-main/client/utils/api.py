@@ -43,7 +43,8 @@ def ask_question(question):
             time.sleep(4) # Rate limit fix
         except Exception:
             # Fallback to stable model if 2.0 fails (e.g. 429 Limit 0)
-            model = genai.GenerativeModel('gemini-1.5-flash')
+            # Using 'gemini-1.5-flash-latest' to avoid 404 on base name
+            model = genai.GenerativeModel('gemini-1.5-flash-latest')
             response = model.generate_content(question)
         
         # Mimic the previous API response structure for compatibility
@@ -79,7 +80,7 @@ def get_answer_with_image(question: str, image_file):
             time.sleep(4) # Rate limit fix
         except Exception:
             # Fallback to stable model if 2.0 fails
-            model = genai.GenerativeModel('gemini-1.5-flash')
+            model = genai.GenerativeModel('gemini-1.5-flash-latest')
             # Re-open or reset image if needed (PIL Image object is reusable for read)
             # Actually Image.open doesn't read until usage, but here we passed it.
             # Best to ensure it's available. The stream 'image_file' might be consumed.
